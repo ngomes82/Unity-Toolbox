@@ -8,10 +8,8 @@ public static class AnimatorExtensions
 {
     public static bool TryRegisterStateChangeCallback(this Animator animator, string stateName, StateChangeType stateChangeType, Action callback)
     {
-        bool registered = false;
-
-        int callbackIdx = (int)stateChangeType;
-
+        bool hasRegistered          = false;
+        int callbackIdx             = (int)stateChangeType;
         var allStateChangeCallbacks = animator.GetBehaviours<AnimatorStateChangeCallback>();
         
         foreach (var stateCallbackScript in allStateChangeCallbacks)
@@ -19,10 +17,15 @@ public static class AnimatorExtensions
             if (stateCallbackScript.name == stateName)
             {
                 stateCallbackScript.callbacks[callbackIdx] = callback;
-                registered = true;
+                hasRegistered = true;
             }
         }
 
-        return registered;
+        if(!hasRegistered)
+        {
+            Debug.LogError($"Failed to register {stateChangeType.ToString()} callback for {stateName} on {animator.gameObject.name}. Make sure to add an AnimatorStateChangeCallback script to the relevant animation state!", animator.gameObject);
+        }
+
+        return hasRegistered;
     }
 }
