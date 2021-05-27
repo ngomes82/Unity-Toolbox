@@ -122,13 +122,13 @@ static public class EasingUtils
         return (float)func(t, b, c, d);
     }
 
-    public static Vector3 VectorEaser(Type function, double t, Vector3 b, Vector3 c, double d)
+    public static Vector3 Ease(Type function, double t, Vector3 b, Vector3 c, double d)
     {
         EasingFunction func = Get(function);
-        return VectorEaser(func, t, b, c, d);
+        return Ease(func, t, b, c, d);
     }
 
-    public static Vector3 VectorEaser(EasingFunction function, double t, Vector3 b, Vector3 c, double d)
+    public static Vector3 Ease(EasingFunction function, double t, Vector3 b, Vector3 c, double d)
     {
         return new Vector3((float)function(t, b.x, c.x, d), (float)function(t, b.y, c.y, d), (float)function(t, b.z, c.z, d));
     }
