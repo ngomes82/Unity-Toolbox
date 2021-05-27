@@ -23,7 +23,7 @@ public static class AnimatorExtensions
 
         if(!hasRegistered)
         {
-            Debug.LogError($"Failed to register {stateChangeType.ToString()} callback for {stateName} on {animator.gameObject.name}. Make sure to add an AnimatorStateChangeCallback script to the relevant animation state!", animator.gameObject);
+            Debug.LogError($"Failed to register {stateChangeType} callback for {stateName} on {animator.gameObject.name}. Make sure to add an AnimatorStateChangeCallback script to the relevant animation state!", animator.gameObject);
         }
 
         return hasRegistered;

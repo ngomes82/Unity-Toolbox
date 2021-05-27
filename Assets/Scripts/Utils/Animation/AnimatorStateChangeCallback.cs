@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class AnimatorStateChangeCallback : StateMachineBehaviour
 {
-    public enum StateChangeType : int
+    public enum StateChangeType
     {
         OnEnter = 0,
         OnExit = 1
