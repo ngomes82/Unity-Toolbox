@@ -12,16 +12,14 @@ public static class AnimatorExtensions
 
         int callbackIdx = (int)stateChangeType;
 
-        var stateCallbacks = animator.GetBehaviours<AnimatorStateChangeCallback>();
-        if (stateCallbacks.Length > 0)
+        var allStateChangeCallbacks = animator.GetBehaviours<AnimatorStateChangeCallback>();
+        
+        foreach (var stateCallbackScript in allStateChangeCallbacks)
         {
-            foreach (var state in stateCallbacks)
+            if (stateCallbackScript.name == stateName)
             {
-                if (state.name == stateName)
-                {
-                    state.callbacks[callbackIdx] = callback;
-                    registered = true;
-                }
+                stateCallbackScript.callbacks[callbackIdx] = callback;
+                registered = true;
             }
         }
 
