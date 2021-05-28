@@ -16,4 +16,10 @@ public static class ListExtensions
             toShuffle[i] = t;
         }
     }
+
+    public static T RandomElement<T>(this List<T> list)
+    {
+        int index = Random.Range(0, list.Count - 1);
+        return list[index];
+    }
 }
