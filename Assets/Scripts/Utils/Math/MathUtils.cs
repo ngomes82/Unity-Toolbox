@@ -86,4 +86,19 @@ public static class MathUtils
 
         return weights.Count - 1;
     }
+
+    public static List<T> RandomWithoutReplacement<T>(List<T> values, int count)
+    {
+        Debug.Assert(count <= values.Count, $"Can't choose {count} from {values.Count} items without replacement.");
+
+        List<T> toReturn = new List<T>(count);
+        RandomIntSequence indicies = new RandomIntSequence(0, values.Count);
+
+        for(int i=0; i < count; i++)
+        {
+            toReturn.Add(values[indicies.Next()]);
+        }
+
+        return toReturn;
+    }
 }
