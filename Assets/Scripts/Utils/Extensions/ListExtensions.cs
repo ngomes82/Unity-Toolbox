@@ -26,6 +26,10 @@ public static class ListExtensions
         T temp = list[index1];
         list[index1] = list[index2];
         list[index2] = temp;
+    }
 
+    public static T Last<T>(this List<T> list)
+    {
+        return list[list.Count - 1];
     }
 }
