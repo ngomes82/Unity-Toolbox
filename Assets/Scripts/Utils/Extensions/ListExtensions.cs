@@ -11,9 +11,7 @@ public static class ListExtensions
         for (int i = 0; i < (n - 1); i++)
         {
             int r = i + Random.Range(0, n - i);
-            T t = toShuffle[r];
-            toShuffle[r] = toShuffle[i];
-            toShuffle[i] = t;
+            toShuffle.Swap(r, i);
         }
     }
 
@@ -21,5 +19,13 @@ public static class ListExtensions
     {
         int index = Random.Range(0, list.Count - 1);
         return list[index];
+    }
+
+    public static void Swap<T>(this List<T> list, int index1, int index2)
+    {
+        T temp = list[index1];
+        list[index1] = list[index2];
+        list[index2] = temp;
+
     }
 }
