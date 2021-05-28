@@ -11,7 +11,7 @@ public static class RandUtils
     /// The 2017 GDC talk by SMU Guildhall's Squirrel Eiserloh
     /// https://www.youtube.com/watch?v=LWFzPP8ZbdU
     /// </summary>
-    public static uint QuickRandom(uint position, uint seed = 0)
+    public static uint QuickRand(uint position, uint seed = 0)
     {
         const uint PRIME_1 = 0xB5297A4D;
         const uint PRIME_2 = 0x68E31DA4;
