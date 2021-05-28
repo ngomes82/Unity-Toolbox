@@ -49,4 +49,51 @@ public static class MathUtils
     {
         return xIndex + (yIndex * width);
     }
+
+    /// <summary>
+    /// Converts from cartesian to 45-isometric coordinate space
+    /// </summary>
+    /// <param name="input"></param>
+    /// <param name="output"></param>
+    public static void CartToIso(Vector2 input, out Vector2 output)
+    {
+        output.x = input.x - input.y;
+        output.y = (input.x + input.y) * 0.5f;
+    }
+
+    /// <summary>
+    /// Converts from 45-isometric to cartesian coordinate space
+    /// </summary>
+    /// <param name="input"></param>
+    /// <param name="output"></param>
+    public static void IsoToCart(Vector2 input, out Vector2 output)
+    {
+        output.x = (2f * input.y + input.x) * 0.5f;
+        output.y = (2f * input.y - input.x) * 0.5f;
+    }
+
+    /// <summary>
+    /// Converts from cartesian to polar coordinate space. Angle is returned in radians.
+    /// </summary>
+    /// <param name="input"></param>
+    /// <param name="radius"></param>
+    /// <param name="angle"> In Radians</param>
+    public static void CartToPolar(Vector2 input, out float radius, out float angle)
+    {
+        radius = input.magnitude;
+        angle  = Mathf.Atan2(input.y, input.x);
+    }
+
+    /// <summary>
+    /// Converts from cartesian to polar coordinate space. Angle is in radians.
+    /// </summary>
+    /// <param name="radius"></param>
+    /// <param name="angle"></param>
+    /// <param name="output"></param>
+    public static void PolarToCart(float radius, float angle, out Vector2 output)
+    {
+        output.x = radius * Mathf.Cos(angle);
+        output.y = radius * Mathf.Sin(angle);
+    }
+
 }
