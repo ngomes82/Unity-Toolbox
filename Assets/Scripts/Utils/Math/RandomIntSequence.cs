@@ -19,6 +19,7 @@ public class RandomIntSequence
     private EndType endType;
     public RandomIntSequence(int startNum, int count, EndType endType = EndType.Cycle)
     {
+        this.currentIndex = 0;
         this.endType = endType;
         this.sequence = Enumerable.Range(startNum, count).ToList();
         this.sequence.Shuffle();
