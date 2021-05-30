@@ -1,24 +1,58 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 /// <summary>
 /// Creates and cycles through a shuffled sequence of integers.
 /// </summary>
 public class RandomIntSequence
 {
-    private List<int> sequence;
-    private int sequenceIndex;
-
-    public RandomIntSequence(int startNum, int count)
+    public enum EndType
     {
-        sequence = Enumerable.Range(startNum, count).ToList();
-        sequence.Shuffle();
+        Cycle,
+        Reshuffle,
+        Reshuffle_Not_Same_Twice
+    }
+
+    private List<int> sequence;
+    private int currentIndex;
+    private EndType endType;
+    public RandomIntSequence(int startNum, int count, EndType endType = EndType.Cycle)
+    {
+        this.endType = endType;
+        this.sequence = Enumerable.Range(startNum, count).ToList();
+        this.sequence.Shuffle();
     }
 
     public int Next()
     {
-        int toReturn = sequence[sequenceIndex];
-        sequenceIndex = (sequenceIndex + 1) % sequence.Count;
+        int toReturn = sequence[currentIndex];
+
+        if (endType == EndType.Cycle)
+        {
+            currentIndex = (currentIndex + 1) % sequence.Count;
+        }
+        else
+        {
+            currentIndex = currentIndex + 1;
+
+            if(currentIndex > sequence.Count-1)
+            {
+                currentIndex = 0;
+                sequence.Shuffle();
+                
+                if(endType == EndType.Reshuffle_Not_Same_Twice)
+                {
+                    if(sequence[currentIndex] == toReturn)
+                    {
+                        int randomIndex = Random.Range(currentIndex + 1, sequence.Count);
+                        sequence.Swap(currentIndex, randomIndex);
+                    }
+                }
+            }
+        }
+
+
         return toReturn;
     }
 }
