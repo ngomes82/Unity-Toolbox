@@ -28,17 +28,12 @@ public class RandomIntSequence
     {
         int toReturn = sequence[currentIndex];
 
-        if (endType == EndType.Cycle)
-        {
-            currentIndex = (currentIndex + 1) % sequence.Count;
-        }
-        else
-        {
-            currentIndex = currentIndex + 1;
+        currentIndex = (currentIndex + 1) % sequence.Count;
 
-            if(currentIndex > sequence.Count-1)
+        if (endType != EndType.Cycle)
+        {
+            if(currentIndex == 0)
             {
-                currentIndex = 0;
                 sequence.Shuffle();
                 
                 if(endType == EndType.Reshuffle_Not_Same_Twice)
