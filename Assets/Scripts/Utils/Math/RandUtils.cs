@@ -5,6 +5,11 @@ using UnityEngine;
 
 public static class RandUtils 
 {
+    public static bool NextBool(float trueOdds = 0.5f)
+    {
+        return Random.value < trueOdds;
+   }
+
     /// <summary>
     /// Based on Math for Game Programmers: Noise-Based RNG 
     /// -----------
