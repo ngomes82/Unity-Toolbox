@@ -96,4 +96,25 @@ public static class MathUtils
         output.y = radius * Mathf.Sin(angle);
     }
 
+    public static Vector2 CalculateCenter(params Vector2[] points)
+    {
+        Vector2 sum = Vector2.zero;
+        for(int i=0; i < points.Length; i++)
+        {
+            sum += points[i];
+        }
+
+        return sum / points.Length;
+    }
+
+    public static Vector3 CalculateCenter(params Vector3[] points)
+    {
+        Vector3 sum = Vector3.zero;
+        for (int i = 0; i < points.Length; i++)
+        {
+            sum += points[i];
+        }
+
+        return sum / points.Length;
+    }
 }
