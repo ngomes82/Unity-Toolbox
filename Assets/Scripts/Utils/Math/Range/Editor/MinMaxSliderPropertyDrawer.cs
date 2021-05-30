@@ -2,14 +2,14 @@
 using UnityEditor;
 using System;
 
-[CustomPropertyDrawer(typeof(BoundsAttribute))]
-public class BoundsDrawer : PropertyDrawer
+[CustomPropertyDrawer(typeof(MinMaxSliderAttribute))]
+public class MinMaxSliderPropertyDrawer : PropertyDrawer
 {
     // Draw the property inside the given rect
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         // First get the attribute since it contains the range for the slider
-        BoundsAttribute bounds = attribute as BoundsAttribute;
+        MinMaxSliderAttribute bounds = attribute as MinMaxSliderAttribute;
         
         EditorGUI.BeginProperty(position, label, property);
 
@@ -28,7 +28,7 @@ public class BoundsDrawer : PropertyDrawer
 
         if(minProperty == null || maxProperty == null)
         {
-            EditorGUI.LabelField(new Rect(position.x, position.y, 200f, position.height), "Use [Bounds] with a Range object");
+            EditorGUI.LabelField(new Rect(position.x, position.y, 200f, position.height), "Use [MinMaxSlider] with a Range object");
             EditorGUI.EndProperty();
             return;
         }
