@@ -1,14 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityUtils.Random;
 
-
-public static class RandUtils 
+public static class RandUtils
 {
-    public static bool NextBool(float trueOdds = 0.5f)
-    {
-        return Random.value < trueOdds;
-   }
 
     /// <summary>
     /// Based on Math for Game Programmers: Noise-Based RNG 
@@ -58,7 +54,7 @@ public static class RandUtils
     /// <returns></returns>
     public static int ChooseWeightedArrayIndex(List<float> weights, float sum)
     {
-        float randWeight = UnityEngine.Random.Range(0f, sum);
+        float randWeight = Random.Instance.Range(0f, sum);
         for (int i = 0; i < weights.Count; i++)
         {
             randWeight -= weights[i];

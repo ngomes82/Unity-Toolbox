@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityUtils.Random;
 
 /// <summary>
 /// Creates and cycles through a shuffled sequence of integers.
@@ -33,15 +34,15 @@ public class RandomIntSequence
 
         if (endType != EndType.Cycle)
         {
-            if(currentIndex == 0)
+            if (currentIndex == 0)
             {
                 sequence.Shuffle();
-                
-                if(endType == EndType.Reshuffle_Not_Same_Twice)
+
+                if (endType == EndType.Reshuffle_Not_Same_Twice)
                 {
-                    if(sequence[currentIndex] == toReturn)
+                    if (sequence[currentIndex] == toReturn)
                     {
-                        int randomIndex = Random.Range(currentIndex + 1, sequence.Count);
+                        int randomIndex = Random.Instance.Range(currentIndex + 1, sequence.Count);
                         sequence.Swap(currentIndex, randomIndex);
                     }
                 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityUtils.Random;
 
 public static class ListExtensions
 {
@@ -10,14 +11,14 @@ public static class ListExtensions
         int n = toShuffle.Count;
         for (int i = 0; i < (n - 1); i++)
         {
-            int r = i + Random.Range(0, n - i);
+            int r = i + Random.Instance.Range(0, n - i);
             toShuffle.Swap(r, i);
         }
     }
 
     public static T RandomElement<T>(this List<T> list)
     {
-        int index = Random.Range(0, list.Count - 1);
+        int index = Random.Instance.Range(0, list.Count - 1);
         return list[index];
     }
 

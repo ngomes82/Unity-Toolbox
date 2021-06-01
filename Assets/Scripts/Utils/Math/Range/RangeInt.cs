@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Random = UnityUtils.Random;
 
 [Serializable]
 public class RangeInt
@@ -15,9 +15,9 @@ public class RangeInt
     public int Max { get { return max; } }
 
 
-    public int RandomInclusive { get { return UnityEngine.Random.Range(min, max + 1); } }
+    public int RandomInclusive { get { return Random.Instance.Range(min, max + 1); } }
 
-    public int RandomExclusive { get { return UnityEngine.Random.Range(min, max); } }
+    public int RandomExclusive { get { return Random.Instance.Range(min, max); } }
 
     public RangeInt(){}
 
