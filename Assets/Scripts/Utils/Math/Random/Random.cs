@@ -54,22 +54,22 @@ namespace UnityUtils
             return Next() < oddsOfTrue;
         }
 
-        //Inclusive or exclusive
+        //Inclusive
         public float Range(float min, float max)
         {
             return Next() * (max - min) + min;
         }
 
-        //Inclusive or Exclusive?
+        //Exclusive
         public int Range(int min, int max)
         {
-            return min + NextInt() / (int.MaxValue / (max - min + 1) + 1);
+            return (int) (Next() * (max - min) + min);
         }
 
-        //Inclusive or Exclusive?
+        //Exclusive
         public uint Range(uint min, uint max)
         {
-            return min + NextUInt() / (uint.MaxValue / (max - min + 1) + 1);
+            return (uint) (Next() * (max - min) + min);
         }
     }
 }
