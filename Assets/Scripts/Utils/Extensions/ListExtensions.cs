@@ -6,19 +6,25 @@ using Random = UnityUtils.Random;
 public static class ListExtensions
 {
     //Fisher-Yates Shuffle
-    public static void Shuffle<T>(this List<T> toShuffle)
+    public static void Shuffle<T>(this List<T> toShuffle, Random rng = null)
     {
+        if (rng == null)
+            rng = Random.Instance;
+
         int n = toShuffle.Count;
         for (int i = 0; i < (n - 1); i++)
         {
-            int r = i + Random.Instance.Range(0, n - i);
+            int r = i + rng.Range(0, n - i);
             toShuffle.Swap(r, i);
         }
     }
 
-    public static T RandomElement<T>(this List<T> list)
+    public static T RandomElement<T>(this List<T> list, Random rng = null)
     {
-        int index = Random.Instance.Range(0, list.Count - 1);
+        if (rng == null)
+            rng = Random.Instance;
+
+        int index = rng.Range(0, list.Count - 1);
         return list[index];
     }
 

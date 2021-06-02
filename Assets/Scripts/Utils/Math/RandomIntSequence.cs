@@ -18,12 +18,19 @@ public class RandomIntSequence
     private List<int> sequence;
     private int currentIndex;
     private EndType endType;
-    public RandomIntSequence(int startNum, int count, EndType endType = EndType.Cycle)
+
+    private Random rand;
+
+    public RandomIntSequence(int startNum, int count, EndType endType = EndType.Cycle, Random rng = null)
     {
+        if (rng == null)
+            rng = Random.Instance;
+
+        this.rand = rng;
         this.currentIndex = 0;
         this.endType = endType;
         this.sequence = Enumerable.Range(startNum, count).ToList();
-        this.sequence.Shuffle();
+        this.sequence.Shuffle( rand );
     }
 
     public int Next()
@@ -36,13 +43,13 @@ public class RandomIntSequence
         {
             if (currentIndex == 0)
             {
-                sequence.Shuffle();
+                sequence.Shuffle( rand );
 
                 if (endType == EndType.Reshuffle_Not_Same_Twice)
                 {
                     if (sequence[currentIndex] == toReturn)
                     {
-                        int randomIndex = Random.Instance.Range(currentIndex + 1, sequence.Count);
+                        int randomIndex = rand.Range(currentIndex + 1, sequence.Count);
                         sequence.Swap(currentIndex, randomIndex);
                     }
                 }
