@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEngine;
-
+using Random = UnityUtils.Random;
 
 [Serializable]
 public class RangeFloat
@@ -13,7 +13,7 @@ public class RangeFloat
     public float Min { get { return min; } }
     public float Max { get { return max; } }
 
-    public float RandomInclusive { get { return UnityEngine.Random.Range(min, max); } }
+    public float RandomInclusive { get { return Random.Instance.Range(min, max); } }
 
     public RangeFloat(){ }
 
