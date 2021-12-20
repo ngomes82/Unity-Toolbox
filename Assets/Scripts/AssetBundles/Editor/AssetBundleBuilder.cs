@@ -57,9 +57,6 @@ public class AssetBundleBuilder : EditorWindow
                 string name = Path.GetFileName(filesToUpload[i]);
                 s3Uploader.UploadFileToAWS3(name, filesToUpload[i]);
             }
-
-            //HTTP PUT bundles up on s3 or firestore
-            //https://medium.com/xrlo-extended-reality-lowdown/uploading-to-aws-from-unity-5e7de2c80fce
         }
     }
 
@@ -98,7 +95,28 @@ public class S3Uploader
         string region = "us-east-2";
         string longDate = System.DateTime.UtcNow.ToString("yyyyMMdd'T'HHmmss'Z'");
         string shortDate = System.DateTime.UtcNow.ToString("yyyyMMdd");
-        string signature = Convert.ToBase64String(getSignatureKey(awsSecretKey, shortDate, region, "s3"));
+        byte[] signingKey = getSignatureKey(awsSecretKey, shortDate, region, "s3");
+
+
+        //TODO: Fix Signing Issues that exist here: 
+        //https://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html
+
+
+        string canonicalString = $"PUT http://{awsBucketName}.s3.amazonaws.com{FileName} HTTP/1.1\n" +
+                                 $"Host: {awsBucketName}.s3.amazonaws.com\n" +
+                                 $"x-amz-date: {longDate}\n"+
+                                 $"x-amz-content-sha256: UNSIGNED-PAYLOAD";
+
+        string hashedCanonicalRequest = "f536975d06c0309214f805bb90ccff089219ecd68b2577efef23edd43b7e1a59"; //TODO: Calculate this
+
+        string stringToSign = $"AWS4-HMAC-SHA256\n"+
+                              $"{longDate}\n"+
+                              $"{shortDate}/{region}/s3/aws4_request\n"+
+                              $"{hashedCanonicalRequest}";
+
+        string signature = Convert.ToBase64String(HmacSHA256(stringToSign, signingKey));
+
+
 
         string url = $"http://{awsBucketName}.s3.amazonaws.com/{FileName}";
         string authHeader = $"AWS4-HMAC-SHA256 Credential={awsAccessKey}/{shortDate}/{region}/s3/aws4_request," +
