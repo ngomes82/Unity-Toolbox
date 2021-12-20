@@ -4,21 +4,23 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class LoadAssetRequest<T> where T : UnityEngine.Object
+
+public class LoadBundleRequest
 {
     public string bundleName;
-    public string assetName;
+
+    public AssetBundle assetBundle = null;
+
     public string loadMessage = "Loading Start";
     public bool isDone = false;
-    public T asset = null;
 
-    public IEnumerator LoadAsset()
+    public IEnumerator LoadBundle()
     {
         if (!AssetBundleManager.loadedBundles.ContainsKey(bundleName))
         {
             var bundleFilePath = $"{AssetBundleManager.ASSET_BUNDLE_DOWNLOAD_FOLDER}/{bundleName}";
 
-            if ( !AssetBundleManager.IsDownloadedBundleValid(bundleName) )
+            if (!AssetBundleManager.IsDownloadedBundleValid(bundleName))
             {
                 var www = AssetBundleManager.CreateHttpGetBundleRequest(bundleName);
 
@@ -77,7 +79,40 @@ public class LoadAssetRequest<T> where T : UnityEngine.Object
 
         if (AssetBundleManager.loadedBundles.ContainsKey(bundleName))
         {
-            var bundle = AssetBundleManager.loadedBundles[bundleName];
+            assetBundle = AssetBundleManager.loadedBundles[bundleName];
+        }
+        else
+        {
+            Debug.LogException(new System.Exception($"BUNDLE ERROR: Failed to load bundle {bundleName}"));
+        }
+
+        isDone = true;
+    }
+
+}
+
+public class LoadAssetRequest<T> where T : UnityEngine.Object
+{
+    public string bundleName;
+    public string assetName;
+    public string loadMessage = "Loading Start";
+    public bool isDone = false;
+    public T asset = null;
+
+    public IEnumerator LoadAsset()
+    {
+        var loadBundleRequest = AssetBundleManager.CreateLoadBundleRequest(bundleName);
+        var routine = loadBundleRequest.LoadBundle();
+
+        while(!loadBundleRequest.isDone)
+        {
+            routine.MoveNext();
+            yield return null;
+        }
+
+        if (loadBundleRequest.assetBundle != null)
+        {
+            var bundle = loadBundleRequest.assetBundle;
 
             if (bundle != null)
             {
@@ -97,10 +132,6 @@ public class LoadAssetRequest<T> where T : UnityEngine.Object
                 }
 
             }
-        }
-        else
-        {
-            Debug.LogException(new System.Exception($"BUNDLE ERROR: Failed to load bundle {bundleName}"));
         }
 
         isDone = true;

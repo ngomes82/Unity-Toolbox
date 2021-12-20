@@ -53,6 +53,14 @@ public class AssetBundleManager
         }
     }
 
+    public static LoadBundleRequest CreateLoadBundleRequest(string _bundleName)
+    {
+        return new LoadBundleRequest()
+        {
+            bundleName = _bundleName
+        };
+    }
+
     public static LoadAssetRequest<T> CreateAssetLoadRequest<T>(string _bundleName, string _assetName) where T: UnityEngine.Object
     {
         return new LoadAssetRequest<T>()
