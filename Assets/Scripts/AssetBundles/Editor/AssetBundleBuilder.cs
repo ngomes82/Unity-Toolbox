@@ -12,9 +12,9 @@ using System.Text;
 
 public class AssetBundleBuilder : EditorWindow
 {
-    private static string rootUrl = string.Empty;
-    private static string userId = string.Empty;
-    private static string password = string.Empty;
+    private static string awsBucketName = string.Empty;
+    private static string awsAccessKey = string.Empty;
+    private static string awsSecretKey = string.Empty;
 
     [MenuItem("Tools/Asset Bundle Builder")]
     static void ShowWindow()
@@ -43,13 +43,13 @@ public class AssetBundleBuilder : EditorWindow
             File.WriteAllText(GetBundleBuildDir() + "/bundleHashes.json", JsonConvert.SerializeObject(bundleHashMap) );
         }
 
-        rootUrl = EditorGUILayout.TextField("Root Url: ", rootUrl);
-        userId = EditorGUILayout.TextField("User Id: ", userId);
-        password = EditorGUILayout.TextField("Password: ", password);
+        awsBucketName = EditorGUILayout.TextField("Aws S3 Bucket Name: ", awsBucketName);
+        awsAccessKey = EditorGUILayout.TextField("Aws Access Key: ", awsAccessKey);
+        awsSecretKey = EditorGUILayout.PasswordField("Aws Secret Key: ", awsSecretKey);
 
         if (GUILayout.Button("Upload All"))
         {
-            S3Uploader s3Uploader = new S3Uploader(rootUrl, userId, password);
+            S3Uploader s3Uploader = new S3Uploader(awsBucketName, awsAccessKey, awsSecretKey);
 
             var filesToUpload = Directory.GetFiles(GetBundleBuildDir());
             for(int i=0; i < filesToUpload.Length; i++)
@@ -82,18 +82,14 @@ public class S3Uploader
     private string awsBucketName = "MyTestBucket";
     private string awsAccessKey = "XXXxxxXXXxxx";
     private string awsSecretKey = "XXXXxxxxxxXXXxxxXXX";
-    private string awsURLBaseVirtual = "";
-
+    
     public S3Uploader(string bucketName, string accessKey, string secretKey)
     {
         awsAccessKey = accessKey;
         awsSecretKey = secretKey;
         awsBucketName = bucketName;
-
-        awsURLBaseVirtual = "http://" +
-           awsBucketName +
-           ".s3.amazonaws.com/";
     }
+
     public void UploadFileToAWS3(string remoteFilePath, string localFilePath)
     {
         string region = "us-east-2";
