@@ -16,12 +16,8 @@ public class AssetBundleManager
     public static Dictionary<string, string> clientBundleHashes = new Dictionary<string, string>();
     
     public static Dictionary<string, AssetBundle> loadedBundles = new Dictionary<string, AssetBundle>();
-    
-    private static Dictionary<string, UnityWebRequest> downloadBundleRequestMap       = new Dictionary<string, UnityWebRequest>();
-    private static Dictionary<string, int> downloadBundleRefCount                     = new Dictionary<string, int>();
 
-    private static Dictionary<string, AssetBundleCreateRequest> loadBundleRequestMap  = new Dictionary<string, AssetBundleCreateRequest>();
-    private static Dictionary<string, int> loadBundleRefCount                         = new Dictionary<string, int>();
+    public static AssetBundleRequestCache requestCache = new AssetBundleRequestCache();
 
 
     private static string rootAssetBundleUrl         = "https://your-fallback-url-goes-here.com";
@@ -91,80 +87,7 @@ public class AssetBundleManager
         AssetBundleManager.loadedBundles.Clear();
     }
 
-    public static AssetBundleCreateRequest CreateLoadBundleFromFileRequest(string bundleName)
-    {
-        if (!AssetBundleManager.loadBundleRequestMap.ContainsKey(bundleName))
-        {
-            var bundleFilePath = $"{AssetBundleManager.ASSET_BUNDLE_DOWNLOAD_FOLDER}/{bundleName}";
-            AssetBundleManager.loadBundleRequestMap[bundleName] = AssetBundle.LoadFromFileAsync(bundleFilePath);
-            AssetBundleManager.loadBundleRefCount[bundleName] = 1;
-        }
-        else
-        {
-            AssetBundleManager.loadBundleRefCount[bundleName] += 1;
-        }
-
-        return AssetBundleManager.loadBundleRequestMap[bundleName];
-    }
-
-    public static AssetBundleCreateRequest CreateLoadBundleFromMemoryRequest(string bundleName, byte[] data)
-    {
-        if (!AssetBundleManager.loadBundleRequestMap.ContainsKey(bundleName))
-        {
-            AssetBundleManager.loadBundleRequestMap[bundleName] = AssetBundle.LoadFromMemoryAsync(data);
-            AssetBundleManager.loadBundleRefCount[bundleName] = 1;
-        }
-        else
-        {
-            AssetBundleManager.loadBundleRefCount[bundleName] += 1;
-        }
-
-        return AssetBundleManager.loadBundleRequestMap[bundleName];
-    }
-
-    public static void ReleaseLoadBundleRequest(string bundleName)
-    {
-        AssetBundleManager.loadBundleRefCount[bundleName] -= 1;
-
-        if( AssetBundleManager.loadBundleRefCount[bundleName] <= 0)
-        {
-            AssetBundleManager.loadBundleRequestMap.Remove(bundleName);
-            AssetBundleManager.loadBundleRefCount.Remove(bundleName);
-        }
-    }
-
-    public static UnityWebRequest CreateHttpGetBundleRequest(string bundleName)
-    {
-        if (!AssetBundleManager.downloadBundleRequestMap.ContainsKey(bundleName))
-        {
-            var webUrl = AssetBundleManager.GetRemoteBundleUrl() + bundleName;
-            var newWebRequest = UnityWebRequest.Get(webUrl);
-            newWebRequest.SendWebRequest();
-            AssetBundleManager.downloadBundleRequestMap[bundleName] = newWebRequest;
-            AssetBundleManager.downloadBundleRefCount[bundleName] = 1;
-        }
-        else
-        {
-            AssetBundleManager.downloadBundleRefCount[bundleName] += 1;
-        }
-
-        return AssetBundleManager.downloadBundleRequestMap[bundleName];
-    }
-
-    public static void ReleaseHttpGetBundleRequest(string bundleName)
-    {
-        AssetBundleManager.downloadBundleRefCount[bundleName] -= 1;
-
-        if(AssetBundleManager.downloadBundleRefCount[bundleName] <= 0)
-        {
-            AssetBundleManager.downloadBundleRequestMap[bundleName].Dispose();
-            AssetBundleManager.downloadBundleRequestMap.Remove(bundleName);
-
-            AssetBundleManager.downloadBundleRefCount.Remove(bundleName);
-        }
-    }
-
-    private static string GetRemoteBundleUrl()
+    public static string GetRemoteBundleUrl()
     {
         RuntimePlatform platform = Application.platform;
 
@@ -188,4 +111,87 @@ public class AssetBundleManager
         return buildTargetToRuntimePlatformMap[target];
     }
 #endif
+}
+
+
+public class AssetBundleRequestCache
+{
+    private static Dictionary<string, UnityWebRequest> downloadBundleRequestMap = new Dictionary<string, UnityWebRequest>();
+    private static Dictionary<string, int> downloadBundleRefCount = new Dictionary<string, int>();
+
+    private static Dictionary<string, AssetBundleCreateRequest> loadBundleRequestMap = new Dictionary<string, AssetBundleCreateRequest>();
+    private static Dictionary<string, int> loadBundleRefCount = new Dictionary<string, int>();
+
+    public AssetBundleCreateRequest CreateLoadBundleFromFileRequest(string bundleName)
+    {
+        if (!loadBundleRequestMap.ContainsKey(bundleName))
+        {
+            var bundleFilePath = $"{AssetBundleManager.ASSET_BUNDLE_DOWNLOAD_FOLDER}/{bundleName}";
+            loadBundleRequestMap[bundleName] = AssetBundle.LoadFromFileAsync(bundleFilePath);
+            loadBundleRefCount[bundleName] = 1;
+        }
+        else
+        {
+            loadBundleRefCount[bundleName] += 1;
+        }
+
+        return loadBundleRequestMap[bundleName];
+    }
+
+    public AssetBundleCreateRequest CreateLoadBundleFromMemoryRequest(string bundleName, byte[] data)
+    {
+        if (!loadBundleRequestMap.ContainsKey(bundleName))
+        {
+            loadBundleRequestMap[bundleName] = AssetBundle.LoadFromMemoryAsync(data);
+            loadBundleRefCount[bundleName] = 1;
+        }
+        else
+        {
+            loadBundleRefCount[bundleName] += 1;
+        }
+
+        return loadBundleRequestMap[bundleName];
+    }
+
+    public void ReleaseLoadBundleRequest(string bundleName)
+    {
+        loadBundleRefCount[bundleName] -= 1;
+
+        if (loadBundleRefCount[bundleName] <= 0)
+        {
+            loadBundleRequestMap.Remove(bundleName);
+            loadBundleRefCount.Remove(bundleName);
+        }
+    }
+
+    public UnityWebRequest CreateHttpGetBundleRequest(string bundleName)
+    {
+        if (!downloadBundleRequestMap.ContainsKey(bundleName))
+        {
+            var webUrl = AssetBundleManager.GetRemoteBundleUrl() + bundleName;
+            var newWebRequest = UnityWebRequest.Get(webUrl);
+            newWebRequest.SendWebRequest();
+            downloadBundleRequestMap[bundleName] = newWebRequest;
+            downloadBundleRefCount[bundleName] = 1;
+        }
+        else
+        {
+            downloadBundleRefCount[bundleName] += 1;
+        }
+
+        return downloadBundleRequestMap[bundleName];
+    }
+
+    public void ReleaseHttpGetBundleRequest(string bundleName)
+    {
+        downloadBundleRefCount[bundleName] -= 1;
+
+        if (downloadBundleRefCount[bundleName] <= 0)
+        {
+            downloadBundleRequestMap[bundleName].Dispose();
+            downloadBundleRequestMap.Remove(bundleName);
+
+            downloadBundleRefCount.Remove(bundleName);
+        }
+    }
 }

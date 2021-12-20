@@ -22,7 +22,7 @@ public class LoadBundleRequest
 
             if (!AssetBundleManager.IsDownloadedBundleValid(bundleName))
             {
-                var www = AssetBundleManager.CreateHttpGetBundleRequest(bundleName);
+                var www = AssetBundleManager.requestCache.CreateHttpGetBundleRequest(bundleName);
 
                 while (!www.isDone)
                 {
@@ -42,9 +42,9 @@ public class LoadBundleRequest
                     AssetBundleManager.clientBundleHashes[bundleName] = AssetBundleManager.serverBundleHashes[bundleName];
                     File.WriteAllText($"{AssetBundleManager.ASSET_BUNDLE_DOWNLOAD_FOLDER}/{AssetBundleManager.ASSET_BUNDLE_HASH_FILE}", JsonConvert.SerializeObject(AssetBundleManager.clientBundleHashes));
 
-                    AssetBundleManager.ReleaseHttpGetBundleRequest(bundleName);
+                    AssetBundleManager.requestCache.ReleaseHttpGetBundleRequest(bundleName);
 
-                    AssetBundleCreateRequest loadBundle = AssetBundleManager.CreateLoadBundleFromMemoryRequest(bundleName, www.downloadHandler.data);
+                    AssetBundleCreateRequest loadBundle = AssetBundleManager.requestCache.CreateLoadBundleFromMemoryRequest(bundleName, www.downloadHandler.data);
 
                     while (!loadBundle.isDone)
                     {
@@ -53,18 +53,18 @@ public class LoadBundleRequest
                     }
 
                     AssetBundleManager.loadedBundles[bundleName] = loadBundle.assetBundle;
-                    AssetBundleManager.ReleaseLoadBundleRequest(bundleName);
+                    AssetBundleManager.requestCache.ReleaseLoadBundleRequest(bundleName);
                 }
                 else
                 {
-                    AssetBundleManager.ReleaseHttpGetBundleRequest(bundleName);
+                    AssetBundleManager.requestCache.ReleaseHttpGetBundleRequest(bundleName);
                     Debug.LogException(new System.Exception($"HTTP GET ERROR [{www.responseCode}] ({www.url}) -- While downloading bundle: {bundleName} -- error:{www.error}"));
                 }
             }
 
             if (!AssetBundleManager.loadedBundles.ContainsKey(bundleName) && File.Exists(bundleFilePath))
             {
-                var loadBundle = AssetBundleManager.CreateLoadBundleFromFileRequest(bundleName);
+                var loadBundle = AssetBundleManager.requestCache.CreateLoadBundleFromFileRequest(bundleName);
 
                 while (!loadBundle.isDone)
                 {
@@ -73,7 +73,7 @@ public class LoadBundleRequest
                 }
 
                 AssetBundleManager.loadedBundles[bundleName] = loadBundle.assetBundle;
-                AssetBundleManager.ReleaseLoadBundleRequest(bundleName);
+                AssetBundleManager.requestCache.ReleaseLoadBundleRequest(bundleName);
             }
         }
 
