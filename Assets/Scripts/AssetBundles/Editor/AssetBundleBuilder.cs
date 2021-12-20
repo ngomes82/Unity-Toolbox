@@ -97,25 +97,30 @@ public class S3Uploader
         string shortDate = System.DateTime.UtcNow.ToString("yyyyMMdd");
         byte[] signingKey = getSignatureKey(awsSecretKey, shortDate, region, "s3");
 
+        string canonicalString = $"PUT\n" +
+                                 $"/{FileName}\n\n" +
+                                 $"host:{awsBucketName}.s3.amazonaws.com\n" +
+                                 $"x-amz-content-sha256:UNSIGNED-PAYLOAD\n" +
+                                 $"x-amz-date:{longDate}\n\n" +
+                                 $"host;x-amz-content-sha256;x-amz-date\n"+
+                                 $"UNSIGNED-PAYLOAD";
 
-        //TODO: Fix Signing Issues that exist here: 
-        //https://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html
-
-
-        string canonicalString = $"PUT http://{awsBucketName}.s3.amazonaws.com{FileName} HTTP/1.1\n" +
-                                 $"Host: {awsBucketName}.s3.amazonaws.com\n" +
-                                 $"x-amz-date: {longDate}\n"+
-                                 $"x-amz-content-sha256: UNSIGNED-PAYLOAD";
-
-        string hashedCanonicalRequest = "f536975d06c0309214f805bb90ccff089219ecd68b2577efef23edd43b7e1a59"; //TODO: Calculate this
+        
+        
+        string hashedCanonicalRequest = ComputeSha256Hash(canonicalString);
 
         string stringToSign = $"AWS4-HMAC-SHA256\n"+
                               $"{longDate}\n"+
                               $"{shortDate}/{region}/s3/aws4_request\n"+
                               $"{hashedCanonicalRequest}";
 
-        string signature = Convert.ToBase64String(HmacSHA256(stringToSign, signingKey));
+        
+        string signature = ByteArrayToString( HmacSHA256(stringToSign, signingKey) );
 
+
+        //string canonicalUtf8Bytes = ByteArrayToString( Encoding.UTF8.GetBytes(canonicalString) );
+        //string stringToSignUtf8Bytes = ByteArrayToString(Encoding.UTF8.GetBytes(stringToSign));
+        //Debug.Log($"{canonicalString}\n\n{canonicalUtf8Bytes}\n\n{stringToSign}\n\n{stringToSignUtf8Bytes}\n\n{signature}");
 
 
         string url = $"http://{awsBucketName}.s3.amazonaws.com/{FileName}";
@@ -169,6 +174,29 @@ public class S3Uploader
         byte[] kSigning = HmacSHA256("aws4_request", kService);
 
         return kSigning;
+    }
+
+    public static string ByteArrayToString(byte[] ba)
+    {
+        StringBuilder hex = new StringBuilder(ba.Length * 2);
+        foreach (byte b in ba)
+            hex.AppendFormat("{0:x2}", b);
+        return hex.ToString();
+    }
+
+    static string ComputeSha256Hash(string rawData)
+    {
+        using (SHA256 sha256Hash = SHA256.Create())
+        {
+            byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                builder.Append(bytes[i].ToString("x2"));
+            }
+            return builder.ToString();
+        }
     }
 }
 #endif
