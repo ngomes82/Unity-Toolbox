@@ -12,17 +12,10 @@ using System.Text;
 
 public class AssetBundleBuilder : EditorWindow
 {
-    enum ServerEnvironment
-    {
-        Dev,
-        Stag,
-        Prod
-    }
-
     private static string awsBucketName = string.Empty;
     private static string awsAccessKey = string.Empty;
     private static string awsSecretKey = string.Empty;
-    private static ServerEnvironment environment = ServerEnvironment.Dev;
+    private static AssetServerEnvironment environment = AssetServerEnvironment.Dev;
 
     [MenuItem("Tools/Asset Bundle Builder")]
     static void ShowWindow()
@@ -54,7 +47,7 @@ public class AssetBundleBuilder : EditorWindow
         awsBucketName = EditorGUILayout.TextField("Aws S3 Bucket Name: ", awsBucketName);
         awsAccessKey = EditorGUILayout.TextField("Aws Access Key: ", awsAccessKey);
         awsSecretKey = EditorGUILayout.PasswordField("Aws Secret Key: ", awsSecretKey);
-        environment = (ServerEnvironment)EditorGUILayout.EnumPopup("Environment: ", environment);
+        environment = (AssetServerEnvironment) EditorGUILayout.EnumPopup("Environment: ", environment);
 
         if (GUILayout.Button("Upload All"))
         {

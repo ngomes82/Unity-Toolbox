@@ -8,10 +8,17 @@ using System.IO;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-
+public enum AssetServerEnvironment
+{
+    Dev,
+    Stag,
+    Prod
+}
 
 public class AssetBundleManager
 {
+    public static AssetServerEnvironment serverEnvironment = AssetServerEnvironment.Dev;
+
     public static Dictionary<string, string> serverBundleHashes = new Dictionary<string, string>();
     public static Dictionary<string, string> clientBundleHashes = new Dictionary<string, string>();
     
@@ -95,7 +102,7 @@ public class AssetBundleManager
         platform = GetRuntimePlatformFromBuildTarget(EditorUserBuildSettings.activeBuildTarget);
 #endif
 
-        return $"{rootAssetBundleUrl}/{Application.version}/{platform}/";
+        return $"{rootAssetBundleUrl}/{serverEnvironment}/{Application.version}/{platform}/";
     }
 
 
