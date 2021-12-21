@@ -12,9 +12,17 @@ using System.Text;
 
 public class AssetBundleBuilder : EditorWindow
 {
+    enum ServerEnvironment
+    {
+        Dev,
+        Stag,
+        Prod
+    }
+
     private static string awsBucketName = string.Empty;
     private static string awsAccessKey = string.Empty;
     private static string awsSecretKey = string.Empty;
+    private static ServerEnvironment environment = ServerEnvironment.Dev;
 
     [MenuItem("Tools/Asset Bundle Builder")]
     static void ShowWindow()
@@ -46,6 +54,7 @@ public class AssetBundleBuilder : EditorWindow
         awsBucketName = EditorGUILayout.TextField("Aws S3 Bucket Name: ", awsBucketName);
         awsAccessKey = EditorGUILayout.TextField("Aws Access Key: ", awsAccessKey);
         awsSecretKey = EditorGUILayout.PasswordField("Aws Secret Key: ", awsSecretKey);
+        environment = (ServerEnvironment)EditorGUILayout.EnumPopup("Environment: ", environment);
 
         if (GUILayout.Button("Upload All"))
         {
@@ -58,7 +67,7 @@ public class AssetBundleBuilder : EditorWindow
 
                 string localFilePath = filesToUpload[i];
                 string fileName = Path.GetFileName(localFilePath);
-                string remoteFilePath = $"{Application.version}/{AssetBundleManager.GetRuntimePlatformFromBuildTarget(EditorUserBuildSettings.activeBuildTarget)}/{fileName}";
+                string remoteFilePath = $"{environment}/{Application.version}/{AssetBundleManager.GetRuntimePlatformFromBuildTarget(EditorUserBuildSettings.activeBuildTarget)}/{fileName}";
                 s3Uploader.UploadFileToAWS3(remoteFilePath, localFilePath);
             }
         }
@@ -100,9 +109,10 @@ public class S3Uploader
         string canonicalString = $"PUT\n" +
                                  $"/{remoteFilePath}\n\n" +
                                  $"host:{awsBucketName}.s3.amazonaws.com\n" +
+                                 $"x-amz-acl:public-read\n" +
                                  $"x-amz-content-sha256:UNSIGNED-PAYLOAD\n" +
                                  $"x-amz-date:{longDate}\n\n" +
-                                 $"host;x-amz-content-sha256;x-amz-date\n"+
+                                 $"host;x-amz-acl;x-amz-content-sha256;x-amz-date\n" +
                                  $"UNSIGNED-PAYLOAD";
 
         
@@ -125,15 +135,17 @@ public class S3Uploader
 
         string url = $"http://{awsBucketName}.s3.amazonaws.com/{remoteFilePath}";
         string authHeader = $"AWS4-HMAC-SHA256 Credential={awsAccessKey}/{shortDate}/{region}/s3/aws4_request," +
-                            $"SignedHeaders=host;x-amz-date;x-amz-content-sha256," +
+                            $"SignedHeaders=host;x-amz-acl;x-amz-content-sha256;x-amz-date," +
                             $"Signature={signature}";
 
         WebRequest webRequest = (HttpWebRequest)WebRequest.Create(url);
         webRequest.Method = "PUT";
 
         webRequest.Headers.Add("Authorization", authHeader);
-        webRequest.Headers.Add("x-amz-content-sha256", "UNSIGNED-PAYLOAD");
+        webRequest.Headers.Add("x-amz-acl", "public-read");
         webRequest.Headers.Add("x-amz-date", longDate);
+        webRequest.Headers.Add("x-amz-content-sha256", "UNSIGNED-PAYLOAD");
+        
 
         byte[] fileRawBytes = File.ReadAllBytes(localFilePath);
         webRequest.ContentLength = fileRawBytes.Length;
