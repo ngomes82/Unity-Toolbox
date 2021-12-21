@@ -92,6 +92,8 @@ public class S3Uploader
         awsBucketName = bucketName;
     }
 
+    //NOTE: For more info on steps needed to sign Amazon REST requests follow this link:
+    //https://docs.aws.amazon.com/general/latest/gr/sigv4-create-canonical-request.html
     public void UploadFileToAWS3(string remoteFilePath, string localFilePath)
     {
         string region = "us-east-2";
@@ -121,6 +123,7 @@ public class S3Uploader
         string signature = ByteArrayToString( HmacSHA256(stringToSign, signingKey) );
 
 
+        //DEBUG: Use the debug logs below alongside amazon error text to debug auth issues with signing.
         //string canonicalUtf8Bytes = ByteArrayToString( Encoding.UTF8.GetBytes(canonicalString) );
         //string stringToSignUtf8Bytes = ByteArrayToString(Encoding.UTF8.GetBytes(stringToSign));
         //Debug.Log($"{canonicalString}\n\n{canonicalUtf8Bytes}\n\n{stringToSign}\n\n{stringToSignUtf8Bytes}\n\n{signature}");
