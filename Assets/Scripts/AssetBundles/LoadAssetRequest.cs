@@ -42,9 +42,8 @@ public class LoadBundleRequest
                     AssetBundleManager.clientBundleHashes[bundleName] = AssetBundleManager.serverBundleHashes[bundleName];
                     File.WriteAllText($"{AssetBundleManager.ASSET_BUNDLE_DOWNLOAD_FOLDER}/{AssetBundleManager.ASSET_BUNDLE_HASH_FILE}", JsonConvert.SerializeObject(AssetBundleManager.clientBundleHashes));
 
-                    AssetBundleManager.requestCache.ReleaseHttpGetBundleRequest(bundleName);
-
                     AssetBundleCreateRequest loadBundle = AssetBundleManager.requestCache.CreateLoadBundleFromMemoryRequest(bundleName, www.downloadHandler.data);
+                    AssetBundleManager.requestCache.ReleaseHttpGetBundleRequest(bundleName);
 
                     while (!loadBundle.isDone)
                     {
