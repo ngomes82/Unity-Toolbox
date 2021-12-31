@@ -15,17 +15,4 @@ public static class DictionaryExtensions
             return fallback;
         }
     }
-
-    public static void AddOrOverwrite<T1, T2>(this Dictionary<T1, T2> dict, T1 key, T2 val)
-    {
-        if (!dict.ContainsKey(key))
-        {
-            dict.Add(key, val);
-        }
-        else
-        {
-            dict[key] = val;
-        }
-    }
-
 }
