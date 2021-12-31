@@ -59,7 +59,7 @@ public class AssetBundleRef<T> : IAssetBundleRef where T : UnityEngine.Object
 
     public LoadAssetRequest<T> CreateAssetLoadRequest()
     {
-        return AssetBundleManager.CreateAssetLoadRequest<T>(bundleName, assetName);
+        return AssetBundleManager.CreateLoadAssetRequest<T>(bundleName, assetName);
     }
 }
 

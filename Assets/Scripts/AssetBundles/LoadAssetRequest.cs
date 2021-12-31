@@ -4,6 +4,9 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class LoadBundleRequest
 {
@@ -16,76 +19,117 @@ public class LoadBundleRequest
 
     public IEnumerator LoadBundle()
     {
-        if (!AssetBundleManager.loadedBundles.ContainsKey(bundleName))
+
+#if UNITY_EDITOR
+        if (EditorPrefs.GetInt("BundleLoadMode") == (int)AssetBundleManager.EditorBundleLoadMode.Simulation)
         {
-            var bundleFilePath = $"{AssetBundleManager.ASSET_BUNDLE_DOWNLOAD_FOLDER}/{bundleName}";
+            isDone = true;
+        }
+#endif
 
-            if (!AssetBundleManager.IsDownloadedBundleValid(bundleName))
+        if (!isDone)
+        {
+            if (!AssetBundleManager.loadedBundles.ContainsKey(bundleName))
             {
-                var www = AssetBundleManager.requestCache.CreateHttpGetBundleRequest(bundleName);
 
-                while (!www.isDone)
+#if UNITY_EDITOR
+                if (EditorPrefs.GetInt("BundleLoadMode") == (int)AssetBundleManager.EditorBundleLoadMode.Local)
                 {
-                    loadMessage = $"Downloading Bundle: {bundleName} ({www.downloadProgress})";
-                    yield return null;
-                }
-
-                if (www.result == UnityWebRequest.Result.Success)
-                {
-                    if (!Directory.Exists(AssetBundleManager.ASSET_BUNDLE_DOWNLOAD_FOLDER))
+                    string bundleFilePath = $"{AssetBundleManager.GetBundleBuildDir()}/{bundleName}";
+                    if (File.Exists(bundleFilePath))
                     {
-                        Directory.CreateDirectory(AssetBundleManager.ASSET_BUNDLE_DOWNLOAD_FOLDER);
+                        var loadBundle = AssetBundleManager.requestCache.CreateLoadBundleFromFileRequest(bundleName, bundleFilePath);
+
+                        while (!loadBundle.isDone)
+                        {
+                            loadMessage = $"Loading Bundle: {bundleName} ({loadBundle.progress})";
+                            yield return null;
+                        }
+
+                        AssetBundleManager.loadedBundles[bundleName] = loadBundle.assetBundle;
+                        AssetBundleManager.requestCache.ReleaseLoadBundleRequest(bundleName);
+                    }
+                    else
+                    {
+                        Debug.LogError($"Could not find bundle at path: {bundleFilePath}");
                     }
 
-                    File.WriteAllBytes(bundleFilePath, www.downloadHandler.data);
+                    isDone = true;
+                }
+#endif
 
-                    AssetBundleManager.clientBundleHashes[bundleName] = AssetBundleManager.serverBundleHashes[bundleName];
-                    File.WriteAllText($"{AssetBundleManager.ASSET_BUNDLE_DOWNLOAD_FOLDER}/{AssetBundleManager.ASSET_BUNDLE_HASH_FILE}", JsonConvert.SerializeObject(AssetBundleManager.clientBundleHashes));
+                if (!isDone)
+                {
+                    var bundleFilePath = $"{AssetBundleManager.ASSET_BUNDLE_DOWNLOAD_FOLDER}/{bundleName}";
 
-                    AssetBundleCreateRequest loadBundle = AssetBundleManager.requestCache.CreateLoadBundleFromMemoryRequest(bundleName, www.downloadHandler.data);
-                    AssetBundleManager.requestCache.ReleaseHttpGetBundleRequest(bundleName);
-
-                    while (!loadBundle.isDone)
+                    if (!AssetBundleManager.IsDownloadedBundleValid(bundleName))
                     {
-                        loadMessage = $"Loading Bundle: {bundleName} ({loadBundle.progress})";
-                        yield return null;
+                        var www = AssetBundleManager.requestCache.CreateHttpGetBundleRequest(bundleName);
+
+                        while (!www.isDone)
+                        {
+                            loadMessage = $"Downloading Bundle: {bundleName} ({www.downloadProgress})";
+                            yield return null;
+                        }
+
+                        if (www.result == UnityWebRequest.Result.Success)
+                        {
+                            if (!Directory.Exists(AssetBundleManager.ASSET_BUNDLE_DOWNLOAD_FOLDER))
+                            {
+                                Directory.CreateDirectory(AssetBundleManager.ASSET_BUNDLE_DOWNLOAD_FOLDER);
+                            }
+
+                            File.WriteAllBytes(bundleFilePath, www.downloadHandler.data);
+
+                            AssetBundleManager.clientBundleHashes[bundleName] = AssetBundleManager.serverBundleHashes[bundleName];
+                            File.WriteAllText($"{AssetBundleManager.ASSET_BUNDLE_DOWNLOAD_FOLDER}/{AssetBundleManager.ASSET_BUNDLE_HASH_FILE}", JsonConvert.SerializeObject(AssetBundleManager.clientBundleHashes));
+
+                            AssetBundleCreateRequest loadBundle = AssetBundleManager.requestCache.CreateLoadBundleFromMemoryRequest(bundleName, www.downloadHandler.data);
+                            AssetBundleManager.requestCache.ReleaseHttpGetBundleRequest(bundleName);
+
+                            while (!loadBundle.isDone)
+                            {
+                                loadMessage = $"Loading Bundle: {bundleName} ({loadBundle.progress})";
+                                yield return null;
+                            }
+
+                            AssetBundleManager.loadedBundles[bundleName] = loadBundle.assetBundle;
+                            AssetBundleManager.requestCache.ReleaseLoadBundleRequest(bundleName);
+                        }
+                        else
+                        {
+                            AssetBundleManager.requestCache.ReleaseHttpGetBundleRequest(bundleName);
+                            Debug.LogException(new System.Exception($"HTTP GET ERROR [{www.responseCode}] ({www.url}) -- While downloading bundle: {bundleName} -- error:{www.error}"));
+                        }
                     }
 
-                    AssetBundleManager.loadedBundles[bundleName] = loadBundle.assetBundle;
-                    AssetBundleManager.requestCache.ReleaseLoadBundleRequest(bundleName);
-                }
-                else
-                {
-                    AssetBundleManager.requestCache.ReleaseHttpGetBundleRequest(bundleName);
-                    Debug.LogException(new System.Exception($"HTTP GET ERROR [{www.responseCode}] ({www.url}) -- While downloading bundle: {bundleName} -- error:{www.error}"));
+                    if (!AssetBundleManager.loadedBundles.ContainsKey(bundleName) && File.Exists(bundleFilePath))
+                    {
+                        var loadBundle = AssetBundleManager.requestCache.CreateLoadBundleFromFileRequest(bundleName, bundleFilePath);
+
+                        while (!loadBundle.isDone)
+                        {
+                            loadMessage = $"Loading Bundle: {bundleName} ({loadBundle.progress})";
+                            yield return null;
+                        }
+
+                        AssetBundleManager.loadedBundles[bundleName] = loadBundle.assetBundle;
+                        AssetBundleManager.requestCache.ReleaseLoadBundleRequest(bundleName);
+                    }
                 }
             }
 
-            if (!AssetBundleManager.loadedBundles.ContainsKey(bundleName) && File.Exists(bundleFilePath))
+            if (AssetBundleManager.loadedBundles.ContainsKey(bundleName))
             {
-                var loadBundle = AssetBundleManager.requestCache.CreateLoadBundleFromFileRequest(bundleName);
-
-                while (!loadBundle.isDone)
-                {
-                    loadMessage = $"Loading Bundle: {bundleName} ({loadBundle.progress})";
-                    yield return null;
-                }
-
-                AssetBundleManager.loadedBundles[bundleName] = loadBundle.assetBundle;
-                AssetBundleManager.requestCache.ReleaseLoadBundleRequest(bundleName);
+                assetBundle = AssetBundleManager.loadedBundles[bundleName];
             }
-        }
+            else
+            {
+                Debug.LogException(new System.Exception($"BUNDLE ERROR: Failed to load bundle {bundleName}"));
+            }
 
-        if (AssetBundleManager.loadedBundles.ContainsKey(bundleName))
-        {
-            assetBundle = AssetBundleManager.loadedBundles[bundleName];
+            isDone = true;
         }
-        else
-        {
-            Debug.LogException(new System.Exception($"BUNDLE ERROR: Failed to load bundle {bundleName}"));
-        }
-
-        isDone = true;
     }
 
 }
@@ -100,39 +144,52 @@ public class LoadAssetRequest<T> where T : UnityEngine.Object
 
     public IEnumerator LoadAsset()
     {
-        var loadBundleRequest = AssetBundleManager.CreateLoadBundleRequest(bundleName);
-        var routine = loadBundleRequest.LoadBundle();
 
-        while(!loadBundleRequest.isDone)
+#if UNITY_EDITOR
+        if(EditorPrefs.GetInt("BundleLoadMode") == (int)AssetBundleManager.EditorBundleLoadMode.Simulation)
         {
-            routine.MoveNext();
-            yield return null;
+            var assetPaths = AssetDatabase.GetAssetPathsFromAssetBundleAndAssetName(bundleName, assetName);
+            asset = AssetDatabase.LoadAssetAtPath<T>(assetPaths[0]);
+            isDone = true;
         }
+#endif
 
-        if (loadBundleRequest.assetBundle != null)
+        if (!isDone)
         {
-            var bundle = loadBundleRequest.assetBundle;
+            var loadBundleRequest = AssetBundleManager.CreateLoadBundleRequest(bundleName);
+            var routine = loadBundleRequest.LoadBundle();
 
-            if (bundle != null)
+            while (!loadBundleRequest.isDone)
             {
-                var loadAsset = bundle.LoadAssetAsync<T>(assetName);
-                
-                while(!loadAsset.isDone)
-                {
-                    loadMessage = $"Loading Asset: {assetName} ({loadAsset.progress})";
-                    yield return null;
-                }
-                
-                asset = loadAsset.asset as T;
-
-                if(asset == null)
-                {
-                    Debug.LogException(new System.Exception($"BUNDLE ERROR: Failed to load asset {bundleName}::{assetName}"));
-                }
-
+                routine.MoveNext();
+                yield return null;
             }
-        }
 
-        isDone = true;
+            if (loadBundleRequest.assetBundle != null)
+            {
+                var bundle = loadBundleRequest.assetBundle;
+
+                if (bundle != null)
+                {
+                    var loadAsset = bundle.LoadAssetAsync<T>(assetName);
+
+                    while (!loadAsset.isDone)
+                    {
+                        loadMessage = $"Loading Asset: {assetName} ({loadAsset.progress})";
+                        yield return null;
+                    }
+
+                    asset = loadAsset.asset as T;
+
+                    if (asset == null)
+                    {
+                        Debug.LogException(new System.Exception($"BUNDLE ERROR: Failed to load asset {bundleName}::{assetName}"));
+                    }
+
+                }
+            }
+
+            isDone = true;
+        }
     }
 }

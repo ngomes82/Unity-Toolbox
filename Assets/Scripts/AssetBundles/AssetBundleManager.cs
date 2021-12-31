@@ -17,6 +17,18 @@ public enum AssetServerEnvironment
 
 public class AssetBundleManager
 {
+#if UNITY_EDITOR
+    public const string KEY_EDITOR_BUNDLE_LOAD_MODE = "BundleLoadMode";
+
+    public enum EditorBundleLoadMode
+    {
+        Simulation = 0,   // Load tagged assets directly from editor using Unity's AssetDatabase.
+        Local = 1,        // Load from locally built asset bundles that exist in Build/AssetBundles - ignore server bundles.
+        Server = 2        // Behave like a live build, download new or missing asset bundles from server, load downloaded bundles.
+    }
+#endif
+
+
     public static AssetServerEnvironment serverEnvironment = AssetServerEnvironment.Dev;
 
     public static Dictionary<string, string> serverBundleHashes = new Dictionary<string, string>();
@@ -64,7 +76,7 @@ public class AssetBundleManager
         };
     }
 
-    public static LoadAssetRequest<T> CreateAssetLoadRequest<T>(string _bundleName, string _assetName) where T: UnityEngine.Object
+    public static LoadAssetRequest<T> CreateLoadAssetRequest<T>(string _bundleName, string _assetName) where T: UnityEngine.Object
     {
         return new LoadAssetRequest<T>()
         {
@@ -107,6 +119,18 @@ public class AssetBundleManager
 
 
 #if UNITY_EDITOR
+    public static string GetBundleBuildDir()
+    {
+        string outputPath = $"Build/AssetBundles/{ AssetBundleManager.GetRuntimePlatformFromBuildTarget(EditorUserBuildSettings.activeBuildTarget) }";
+
+        if (!Directory.Exists(outputPath))
+        {
+            Directory.CreateDirectory(outputPath);
+        }
+
+        return outputPath;
+    }
+
     public static RuntimePlatform GetRuntimePlatformFromBuildTarget(BuildTarget target)
     {
         Dictionary<BuildTarget, RuntimePlatform> buildTargetToRuntimePlatformMap = new Dictionary<BuildTarget, RuntimePlatform>()
@@ -129,11 +153,10 @@ public class AssetBundleRequestCache
     private static Dictionary<string, AssetBundleCreateRequest> loadBundleRequestMap = new Dictionary<string, AssetBundleCreateRequest>();
     private static Dictionary<string, int> loadBundleRefCount = new Dictionary<string, int>();
 
-    public AssetBundleCreateRequest CreateLoadBundleFromFileRequest(string bundleName)
+    public AssetBundleCreateRequest CreateLoadBundleFromFileRequest(string bundleName, string bundleFilePath)
     {
         if (!loadBundleRequestMap.ContainsKey(bundleName))
         {
-            var bundleFilePath = $"{AssetBundleManager.ASSET_BUNDLE_DOWNLOAD_FOLDER}/{bundleName}";
             loadBundleRequestMap[bundleName] = AssetBundle.LoadFromFileAsync(bundleFilePath);
             loadBundleRefCount[bundleName] = 1;
         }

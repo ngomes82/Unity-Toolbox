@@ -17,7 +17,7 @@ public class AssetBundleBuilder : EditorWindow
     private static string awsSecretKey = string.Empty;
     private static AssetServerEnvironment environment = AssetServerEnvironment.Dev;
 
-    [MenuItem("Tools/Asset Bundle Builder")]
+    [MenuItem("Tools/Asset Bundles/Build Window")]
     static void ShowWindow()
     {
         var window = EditorWindow.GetWindow(typeof(AssetBundleBuilder));
@@ -25,12 +25,45 @@ public class AssetBundleBuilder : EditorWindow
         window.minSize = window.maxSize;
     }
 
+
+    [MenuItem("Tools/Asset Bundles/Bundle Load Mode/Simulation")]
+    static void SwitchMode()
+    {
+        SetBundleLoadMode(AssetBundleManager.EditorBundleLoadMode.Simulation);
+    }
+
+    [MenuItem("Tools/Asset Bundles/Bundle Load Mode/Local")]
+    static void SwitchModeLocal()
+    {
+        SetBundleLoadMode(AssetBundleManager.EditorBundleLoadMode.Local);
+    }
+
+    [MenuItem("Tools/Asset Bundles/Bundle Load Mode/Server")]
+    static void SwitchModeServer()
+    {
+        SetBundleLoadMode(AssetBundleManager.EditorBundleLoadMode.Server);
+    }
+
+    private static void SetBundleLoadMode(AssetBundleManager.EditorBundleLoadMode newMode)
+    {
+        EditorPrefs.SetInt(AssetBundleManager.KEY_EDITOR_BUNDLE_LOAD_MODE, (int)newMode);
+        SetCheckMark(newMode);
+    }
+
+    private static void SetCheckMark(AssetBundleManager.EditorBundleLoadMode newMode)
+    {
+        Menu.SetChecked("Tools/Asset Bundles/Bundle Load Mode/Simulation", newMode == AssetBundleManager.EditorBundleLoadMode.Simulation);
+        Menu.SetChecked("Tools/Asset Bundles/Bundle Load Mode/Local", newMode == AssetBundleManager.EditorBundleLoadMode.Local);
+        Menu.SetChecked("Tools/Asset Bundles/Bundle Load Mode/Server", newMode == AssetBundleManager.EditorBundleLoadMode.Server);
+    }
+
+
     void OnGUI()
     {
 
         if (GUILayout.Button("Build All"))
         {
-            string outputPath = GetBundleBuildDir();
+            string outputPath = AssetBundleManager.GetBundleBuildDir();
 
             var manifest = BuildPipeline.BuildAssetBundles(outputPath, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
 
@@ -41,7 +74,7 @@ public class AssetBundleBuilder : EditorWindow
                 bundleHashMap[assetBundles[i]] = manifest.GetAssetBundleHash(assetBundles[i]).ToString();
             }
 
-            File.WriteAllText(GetBundleBuildDir() + "/bundleHashes.json", JsonConvert.SerializeObject(bundleHashMap) );
+            File.WriteAllText(AssetBundleManager.GetBundleBuildDir() + "/bundleHashes.json", JsonConvert.SerializeObject(bundleHashMap) );
         }
 
         awsBucketName = EditorGUILayout.TextField("Aws S3 Bucket Name: ", awsBucketName);
@@ -53,7 +86,7 @@ public class AssetBundleBuilder : EditorWindow
         {
             S3Uploader s3Uploader = new S3Uploader(awsBucketName, awsAccessKey, awsSecretKey);
 
-            var filesToUpload = Directory.GetFiles(GetBundleBuildDir());
+            var filesToUpload = Directory.GetFiles(AssetBundleManager.GetBundleBuildDir());
             for(int i=0; i < filesToUpload.Length; i++)
             {
                 //TODO: Check server hashes against client hashes. Alert User to files changed and total MB changed. Confirm yes,no (type production for prod environment)
@@ -64,18 +97,6 @@ public class AssetBundleBuilder : EditorWindow
                 s3Uploader.UploadFileToAWS3(remoteFilePath, localFilePath);
             }
         }
-    }
-
-    private string GetBundleBuildDir()
-    {
-        string outputPath = $"Build/AssetBundles/{ AssetBundleManager.GetRuntimePlatformFromBuildTarget(EditorUserBuildSettings.activeBuildTarget) }";
-
-        if (!Directory.Exists(outputPath))
-        {
-            Directory.CreateDirectory(outputPath);
-        }
-
-        return outputPath;
     }
 }
 
