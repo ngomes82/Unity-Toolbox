@@ -15,7 +15,7 @@ public class AssetBundleBuilder : EditorWindow
     private static string awsBucketName = string.Empty;
     private static string awsAccessKey = string.Empty;
     private static string awsSecretKey = string.Empty;
-    private static AssetServerEnvironment environment = AssetServerEnvironment.Dev;
+    private static AssetBundleManager.AssetServerEnvironment environment = AssetBundleManager.AssetServerEnvironment.Dev;
 
     [MenuItem("Tools/Asset Bundles/Build Window")]
     static void ShowWindow()
