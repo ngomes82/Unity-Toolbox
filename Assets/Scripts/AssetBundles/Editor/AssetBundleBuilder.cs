@@ -17,7 +17,7 @@ public class AssetBundleBuilder : EditorWindow
     private static string awsSecretKey = string.Empty;
     private static AssetBundleManager.AssetServerEnvironment environment = AssetBundleManager.AssetServerEnvironment.Dev;
 
-    [MenuItem("Tools/Asset Bundles/Build Window")]
+    [MenuItem("Tools/Asset Bundles/Build Window", priority = -1)]
     static void ShowWindow()
     {
         var window = EditorWindow.GetWindow(typeof(AssetBundleBuilder));
