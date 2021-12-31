@@ -80,7 +80,7 @@ public class AssetBundleBuilder : EditorWindow
         awsBucketName = EditorGUILayout.TextField("Aws S3 Bucket Name: ", awsBucketName);
         awsAccessKey = EditorGUILayout.TextField("Aws Access Key: ", awsAccessKey);
         awsSecretKey = EditorGUILayout.PasswordField("Aws Secret Key: ", awsSecretKey);
-        environment = (AssetServerEnvironment) EditorGUILayout.EnumPopup("Environment: ", environment);
+        environment = (AssetBundleManager.AssetServerEnvironment) EditorGUILayout.EnumPopup("Environment: ", environment);
 
         if (GUILayout.Button("Upload All"))
         {
