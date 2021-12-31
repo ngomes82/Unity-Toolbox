@@ -27,9 +27,16 @@ public class AssetBundleBuilder : EditorWindow
 
 
     [MenuItem("Tools/Asset Bundles/Bundle Load Mode/Simulation")]
-    static void SwitchMode()
+    static void SwitchModeSimulation()
     {
         SetBundleLoadMode(AssetBundleManager.EditorBundleLoadMode.Simulation);
+    }
+
+    [MenuItem("Tools/Asset Bundles/Bundle Load Mode/Simulation", true)]
+    private static bool SwitchModeSimulationValidate()
+    {
+        SetCheckMark((AssetBundleManager.EditorBundleLoadMode)EditorPrefs.GetInt(AssetBundleManager.KEY_EDITOR_BUNDLE_LOAD_MODE));
+        return true;
     }
 
     [MenuItem("Tools/Asset Bundles/Bundle Load Mode/Local")]
