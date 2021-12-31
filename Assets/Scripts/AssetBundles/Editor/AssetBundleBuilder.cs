@@ -86,15 +86,25 @@ public class AssetBundleBuilder : EditorWindow
         {
             S3Uploader s3Uploader = new S3Uploader(awsBucketName, awsAccessKey, awsSecretKey);
 
+            string rootRemotePath = $"{environment}/{Application.version}/{AssetBundleManager.GetRuntimePlatformFromBuildTarget(EditorUserBuildSettings.activeBuildTarget)}";
+
+            bool isConfirmed = true;
+            if (environment == AssetBundleManager.AssetServerEnvironment.Prod)
+            {
+                isConfirmed = EditorUtility.DisplayDialog("Upload to Prod?", $"This will upload bundles to production server at path: \n\n http://{awsBucketName}.s3.amazonaws.com/{rootRemotePath}", "Upload to Production", "Cancel");
+            }
+
             var filesToUpload = Directory.GetFiles(AssetBundleManager.GetBundleBuildDir());
             for(int i=0; i < filesToUpload.Length; i++)
             {
-                //TODO: Check server hashes against client hashes. Alert User to files changed and total MB changed. Confirm yes,no (type production for prod environment)
-
-                string localFilePath = filesToUpload[i];
-                string fileName = Path.GetFileName(localFilePath);
-                string remoteFilePath = $"{environment}/{Application.version}/{AssetBundleManager.GetRuntimePlatformFromBuildTarget(EditorUserBuildSettings.activeBuildTarget)}/{fileName}";
-                s3Uploader.UploadFileToAWS3(remoteFilePath, localFilePath);
+                if (isConfirmed)
+                {
+                    //TODO: Check server hashes against client hashes. Alert User to files changed and total MB changed. Confirm yes,no (type production for prod environment)
+                    string localFilePath = filesToUpload[i];
+                    string fileName = Path.GetFileName(localFilePath);
+                    string remoteFilePath = $"{rootRemotePath}/{fileName}";
+                    s3Uploader.UploadFileToAWS3(remoteFilePath, localFilePath);
+                }
             }
         }
     }
