@@ -133,7 +133,7 @@ public static class MathUtils
     }
 
     /// <summary>
-    /// Calculates the pdf at X for a normal distribution and normalizes it within 0-1 range
+    /// Calculates the pdf at X for a normal distribution and normalizes it within 0-1 range (using mean normalization)
     /// </summary>
     /// <param name="x"></param>
     /// <param name="mean"></param>
