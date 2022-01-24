@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UITools : MonoBehaviour
 {
-    [MenuItem("UITools/Snap Anchors to Image Corners %[")]
+    [MenuItem("Tools/UITools/Snap Anchors to Image Corners %[")]
     static void AnchorsToCorners()
     {
         foreach (Transform transform in Selection.transforms)
@@ -25,7 +25,7 @@ public class UITools : MonoBehaviour
         }
     }
 
-    [MenuItem("UITools/Image Corners to Anchors %]")]
+    [MenuItem("Tools/UITools/Image Corners to Anchors %]")]
     static void CornersToAnchors()
     {
         foreach (Transform transform in Selection.transforms)
@@ -38,13 +38,13 @@ public class UITools : MonoBehaviour
         }
     }
 
-    [MenuItem("UITools/Mirror Horizontally Around Anchors %;")]
+    [MenuItem("Tools/UITools/Mirror Horizontally Around Anchors %;")]
     static void MirrorHorizontallyAnchors()
     {
         MirrorHorizontally(false);
     }
 
-    [MenuItem("UITools/Mirror Horizontally Around Parent Center %:")]
+    [MenuItem("Tools/UITools/Mirror Horizontally Around Parent Center %:")]
     static void MirrorHorizontallyParent()
     {
         MirrorHorizontally(true);
@@ -74,13 +74,13 @@ public class UITools : MonoBehaviour
         }
     }
 
-    [MenuItem("UITools/Mirror Vertically Around Anchors %'")]
+    [MenuItem("Tools/UITools/Mirror Vertically Around Anchors %'")]
     static void MirrorVerticallyAnchors()
     {
         MirrorVertically(false);
     }
 
-    [MenuItem("UITools/Mirror Vertically Around Parent Center %\"")]
+    [MenuItem("Tools/UITools/Mirror Vertically Around Parent Center %\"")]
     static void MirrorVerticallyParent()
     {
         MirrorVertically(true);
