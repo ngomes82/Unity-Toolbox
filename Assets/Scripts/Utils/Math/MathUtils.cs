@@ -5,6 +5,8 @@ using UnityEngine;
 
 public static class MathUtils
 {
+    public static readonly float E = (float)System.Math.E;
+
     /// <summary>
     /// Returns N samples of a 1-term mathmatical function over the given range.
     /// </summary>
@@ -116,5 +118,38 @@ public static class MathUtils
         }
 
         return sum / points.Length;
+    }
+
+    /// <summary>
+    /// Calculates the pdf at X for for a normal distribution with a given mean and standard deviation
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="mean"></param>
+    /// <param name="std"></param>
+    /// <returns></returns>
+    public static float NormalDist(float x, float mean, float std)
+    {
+        return (1f / (std * Mathf.Sqrt(2f * Mathf.PI))) * Mathf.Pow(E, (-0.5f * Mathf.Pow(((x - mean) / std), 2f)));
+    }
+
+    /// <summary>
+    /// Calculates the pdf at X for a normal distribution and normalizes it within 0-1 range
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="mean"></param>
+    /// <param name="std"></param>
+    /// <returns></returns>
+    public static float NormalDistNormalized(float x, float mean, float std)
+    {
+        float meanVal = MathUtils.NormalDist(mean, mean, std);
+        float value = MathUtils.NormalDist(x, mean, std);
+        float normalizedVal = (value / meanVal) * 0.5f;
+
+        if (x > mean)
+        {
+            normalizedVal = 1f - normalizedVal;
+        }
+
+        return normalizedVal;
     }
 }
