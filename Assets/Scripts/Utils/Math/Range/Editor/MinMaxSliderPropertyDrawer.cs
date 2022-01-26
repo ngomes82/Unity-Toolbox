@@ -43,8 +43,8 @@ public class MinMaxSliderPropertyDrawer : PropertyDrawer
             maxVal = EditorGUI.FloatField(maxRect, maxVal);
 
 
-            minProperty.floatValue = Mathf.Max(minVal, bounds.lowerLimit);
-            maxProperty.floatValue = Mathf.Min(maxVal, bounds.upperLimit);
+            minProperty.floatValue = Mathf.Clamp(minVal, bounds.lowerLimit, bounds.upperLimit);
+            maxProperty.floatValue = Mathf.Clamp(maxVal, bounds.lowerLimit, bounds.upperLimit);
         }
         else if (minProperty.propertyType == SerializedPropertyType.Integer)
         {
