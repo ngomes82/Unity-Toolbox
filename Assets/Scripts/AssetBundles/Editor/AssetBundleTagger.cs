@@ -24,7 +24,7 @@ public class AssetBundleTagger : AssetPostprocessor
     {
         if (str.Contains("$"))
         {
-            string bundleName = Regex.Match(str, "\\$[a-zA-Z0-9]+").Value;
+            string bundleName = Regex.Match(str, "\\$[a-zA-Z0-9_-]+").Value;
             bundleName = bundleName.Replace("$", "").ToLower();
 
             var importer = AssetImporter.GetAtPath(str);
