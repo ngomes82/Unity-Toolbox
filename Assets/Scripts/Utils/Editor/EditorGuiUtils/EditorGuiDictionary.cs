@@ -100,7 +100,7 @@ public class EditorGuiDictionary<V> where V : new()
             {
                 if (dictionaryToEdit.ContainsKey(newKeyName))
                 {
-                    newKeyName += "_" + RandomString(4);
+                    newKeyName += "_" + StringUtils.RandomString(4);
                     GUI.FocusControl("");
                 }
 
@@ -116,7 +116,7 @@ public class EditorGuiDictionary<V> where V : new()
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("+", GUILayout.Width(scrollviewWidth / 2)))
             {
-                var newKey = "new_key_" + RandomString(6);
+                var newKey = "new_key_" + StringUtils.RandomString(6);
                 currentlySelectedKey = newKey;
                 dictionaryToEdit.Add(newKey, new V());
                 OnKeyAdded?.Invoke(newKey);
@@ -150,16 +150,6 @@ public class EditorGuiDictionary<V> where V : new()
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndVertical();
         }
-    }
-
-
-    
-
-    public static string RandomString(int length)
-    {
-        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        return new string(Enumerable.Repeat(chars, length)
-          .Select(s => s[UnityEngine.Random.Range(0, s.Length)]).ToArray());
     }
 }
 #endif

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
@@ -38,5 +39,12 @@ public static class StringUtils
         }
 
         return Mathf.Min(row0.ToArray());
+    }
+
+    public static string RandomString(int length)
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        return new string(Enumerable.Repeat(chars, length)
+          .Select(s => s[UnityEngine.Random.Range(0, s.Length)]).ToArray());
     }
 }
