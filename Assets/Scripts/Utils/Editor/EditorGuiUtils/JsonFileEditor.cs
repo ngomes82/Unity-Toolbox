@@ -12,6 +12,19 @@ public class JsonFileEditor<T1, T2> where T1 : new() where T2 : Dictionary<strin
     public T2 dataContainer;
     public EditorGuiDictionary<T1> dictionaryEditor;
 
+    public T1 CurrentObj
+    {
+        get
+        {
+            if(dataContainer.ContainsKey(dictionaryEditor.currentlySelectedKey))
+            {
+                return dataContainer[dictionaryEditor.currentlySelectedKey];
+            }
+
+            return default(T1);
+        }
+    }
+
     public JsonFileEditor(string argRelativePath)
     {
         relativePath = argRelativePath;
