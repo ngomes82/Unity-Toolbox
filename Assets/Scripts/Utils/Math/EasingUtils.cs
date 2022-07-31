@@ -228,7 +228,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double Linear(double t, double b, double c, double d)
@@ -243,7 +243,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double InQuad(double t, double b, double c, double d)
@@ -257,7 +257,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double InSin(double t, double b, double c, double d)
@@ -271,7 +271,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double InExpo(double t, double b, double c, double d)
@@ -285,7 +285,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double InCirc(double t, double b, double c, double d)
@@ -299,7 +299,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double InCube(double t, double b, double c, double d)
@@ -313,7 +313,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double InQuart(double t, double b, double c, double d)
@@ -327,7 +327,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double InQuint(double t, double b, double c, double d)
@@ -341,7 +341,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double InBack(double t, double b, double c, double d)
@@ -355,7 +355,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double InElastic(double t, double b, double c, double d)
@@ -375,7 +375,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double InBounce(double t, double b, double c, double d)
@@ -391,7 +391,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double OutQuad(double t, double b, double c, double d)
@@ -405,7 +405,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double OutSin(double t, double b, double c, double d)
@@ -419,7 +419,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double OutExpo(double t, double b, double c, double d)
@@ -433,7 +433,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double OutCirc(double t, double b, double c, double d)
@@ -447,7 +447,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double OutCube(double t, double b, double c, double d)
@@ -461,7 +461,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double OutQuart(double t, double b, double c, double d)
@@ -475,7 +475,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double OutQuint(double t, double b, double c, double d)
@@ -489,7 +489,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double OutBack(double t, double b, double c, double d)
@@ -503,7 +503,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double OutElastic(double t, double b, double c, double d)
@@ -523,7 +523,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double OutBounce(double t, double b, double c, double d)
@@ -546,7 +546,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double InOutQuad(double t, double b, double c, double d)
@@ -563,7 +563,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double InOutSin(double t, double b, double c, double d)
@@ -580,7 +580,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double InOutExpo(double t, double b, double c, double d)
@@ -603,7 +603,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double InOutCirc(double t, double b, double c, double d)
@@ -620,7 +620,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double InOutCube(double t, double b, double c, double d)
@@ -637,7 +637,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double InOutQuart(double t, double b, double c, double d)
@@ -654,7 +654,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double InOutQuint(double t, double b, double c, double d)
@@ -670,7 +670,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double InOutBack(double t, double b, double c, double d)
@@ -687,7 +687,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double InOutElastic(double t, double b, double c, double d)
@@ -709,7 +709,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double InOutBounce(double t, double b, double c, double d)
@@ -728,7 +728,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double OutInQuad(double t, double b, double c, double d)
@@ -745,7 +745,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double OutInSin(double t, double b, double c, double d)
@@ -762,7 +762,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double OutInExpo(double t, double b, double c, double d)
@@ -779,7 +779,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double OutInCirc(double t, double b, double c, double d)
@@ -796,7 +796,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     /// <returns>The correct value.</returns>
@@ -813,7 +813,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double OutInQuart(double t, double b, double c, double d)
@@ -830,7 +830,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double OutInQuint(double t, double b, double c, double d)
@@ -845,7 +845,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double OutInBack(double t, double b, double c, double d)
@@ -861,7 +861,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double OutInElastic(double t, double b, double c, double d)
@@ -877,7 +877,7 @@ static public class EasingUtils
     /// </summary>
     /// <param name="t">Current time (in seconds)</param>
     /// <param name="b">Starting Value</param>
-    /// <param name="c">Final Value</param>
+    /// <param name="c">Delta Value</param>
     /// <param name="d">Duration (in seconds)</param>
     /// <returns>The value at time t.</returns>
     public static double OutInBounce(double t, double b, double c, double d)
